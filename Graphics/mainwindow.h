@@ -3,7 +3,7 @@
 
 class QMainWindow;
 //class QPushButton;
-class QSerialDevice;
+class QSerialPort;
 class QImage;
 
 class MainWindow : public QMainWindow
@@ -15,7 +15,7 @@ public:
 
 private:
     //QPushButton *start;
-    QSerialDevice *input;
+    QSerialPort *input;
 
 private slots:
     //void startTransmission();

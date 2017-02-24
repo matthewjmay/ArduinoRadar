@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "drawclass.h"
 #include <QWidget>
 #include <QtSerialPort/QtSerialPort>
 #include <QSerialPort>
@@ -28,6 +29,17 @@ MainWindow::MainWindow(QWidget *parent) :
     painter.drawLine(50,100,50,0);
 
     input = new QSerialPort(this);
-    input->set
+    bool success = input->open(QIODevice::ReadOnly);
+    if (!success)
+        qDebug() << "opening failed";
+    else
+        connect(input, SIGNAL(readyRead()), this, SLOT(radarEvent());
+}
 
+MainWindow::radarEvent()
+{
+    QByteArray raw = input->readAll();
+    QString convert = raw;
+    QStringList list = convert.split('.', QString::SkipEmptyParts);
+    drawClass(list.at(0), list.at(1), this);
 }
