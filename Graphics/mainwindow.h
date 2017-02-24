@@ -1,11 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-
-namespace Ui {
-class MainWindow;
-}
+class QMainWindow;
+//class QPushButton;
+class QSerialDevice;
+class QImage;
 
 class MainWindow : public QMainWindow
 {
@@ -13,10 +12,14 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    //QPushButton *start;
+    QSerialDevice *input;
+
+private slots:
+    //void startTransmission();
+    void radarEvent();
 };
 
 #endif // MAINWINDOW_H

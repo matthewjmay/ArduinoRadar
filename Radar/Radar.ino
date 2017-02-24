@@ -8,7 +8,8 @@ int maximumRange = 200;
 int minimumRange = 0;
 int motorposition = 0;
 int motorincrement = 1;
-long duration, distance; //Duration used to calculate distance
+long duration;
+int distance; //Duration used to calculate distance
 
 Servo motor;
 
@@ -33,20 +34,28 @@ void loop() {
  duration = pulseIn(echoPin, HIGH);
  
  //Calculate the distance (in cm) based on the speed of sound.
- distance = duration/58.2;
+ distance = int(duration)/58;
  if (motorposition > 179)
   motorincrement = -5;
  else if (motorposition <1)
   motorincrement = 5;
  motorposition += motorincrement;
  motor.write(motorposition);
- 
+
+ String sending = "";
  if (distance >= maximumRange || distance <= minimumRange)
-  Serial.println(-1);
+  sending += "-1";
  else {
-  Serial.println(distance);
+  sending += String(distance);
   //digitalWrite(LEDPin, HIGH);
  }
- Serial.println(motorposition);
+ sending += ("." + String(motorposition));
+
+ int strlength = sending.length();
+ char* tosend = new char[strlength];
+ sending.toCharArray(tosend, strlength);
+ 
+ Serial.println(tosend);
+ Serial.write(tosend);
  delay(100);
 }
