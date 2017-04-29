@@ -7,7 +7,7 @@ int servoPin = 9; //Ardiino Pin
 int maximumRange = 200;
 int minimumRange = 0;
 int motorposition = 0;
-int motorincrement = 1;
+int motorincrement = 3;
 long duration;
 int distance; //Duration used to calculate distance
 
@@ -35,27 +35,22 @@ void loop() {
  
  //Calculate the distance (in cm) based on the speed of sound.
  distance = int(duration)/58;
- if (motorposition > 179)
-  motorincrement = -5;
- else if (motorposition <1)
-  motorincrement = 5;
+ if (motorposition > 179 || motorposition < 1)
+  motorincrement *= -1;
  motorposition += motorincrement;
  motor.write(motorposition);
-
  String sending = "";
  if (distance >= maximumRange || distance <= minimumRange)
   sending += "-1";
- else {
+ else
   sending += String(distance);
-  //digitalWrite(LEDPin, HIGH);
- }
  sending += ("." + String(motorposition));
 
- int strlength = sending.length();
+ int strlength = sending.length()+1;
  char* tosend = new char[strlength];
  sending.toCharArray(tosend, strlength);
  
  Serial.println(tosend);
- Serial.write(tosend);
- delay(100);
+ delete tosend;
+ delay(150);
 }

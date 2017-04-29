@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    drawclass.cpp
+    dot.cpp \
+    radarLine.cpp
 
 HEADERS  += mainwindow.h \
-    drawclass.h
+    dot.h \
+    radarLine.h
 
 FORMS    +=

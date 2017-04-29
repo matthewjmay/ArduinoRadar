@@ -1,45 +1,67 @@
 #include "mainwindow.h"
-#include "drawclass.h"
+#include "radarLine.h"
 #include <QWidget>
 #include <QtSerialPort/QtSerialPort>
 #include <QSerialPort>
-#include <QtGui>
+#include <QPainter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    setGeometry(0, 0, 100, 110);
-    QPalette pal = palette();
-
     // set black background
+    QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::black);
     setAutoFillBackground(true);
     setPalette(pal);
 
+    input = new QSerialPort("COM6", this);
+
+    //if serial port does not automatically configure, uncomment below
+    /*
+    input->setBaudRate(QSerialPort::Baud9600);
+    input->setFlowControl(QSerialPort::NoFlowControl);
+    input->setParity(QSerialPort::NoParity);
+    input->setDataBits(QSerialPort::Data8);
+    input->setStopBits(QSerialPort::OneStop);
+    */
+    bool success = input->open(QIODevice::ReadOnly);
+    if (!success)
+        qDebug() << "Error: "<< input->error() << " " << input->errorString() << endl;
+    else
+        input->clear();
+        //connect serial port readyRead to radar event
+        connect(input, &QSerialPort::readyRead, this, &MainWindow::radarEvent);
+}
+
+void MainWindow::paintEvent(QPaintEvent * /* event */ ){
+
     QPainter painter(this);
     painter.setPen(Qt::green);
 
-    painter.drawLine(0,100,100,100);
+    //Draw outer arc
+    QRectF rectangle(QPointF(0, 0), QPointF(width(), height()*2 - height()/15));
+    int startAngle = 0;
+    int spanAngle = 180*16;
 
-    QRectF rectangle(0, 0, 100, 100);
-    int startAngle = 180 * 16;
-    int spanAngle = 0;
     painter.drawArc(rectangle, startAngle, spanAngle);
+    painter.translate(width()/2, height()-height()/30);
 
-    painter.drawLine(50,100,50,0);
-
-    input = new QSerialPort(this);
-    bool success = input->open(QIODevice::ReadOnly);
-    if (!success)
-        qDebug() << "opening failed";
-    else
-        connect(input, SIGNAL(readyRead()), this, SLOT(radarEvent());
+    //Draw radar lines
+    for (int i =0; i<=180/30; ++i){
+        painter.drawLine(0, 0, width()/2, 0);
+        painter.rotate(-30);
+    }
 }
 
-MainWindow::radarEvent()
+void MainWindow::radarEvent()
 {
     QByteArray raw = input->readAll();
     QString convert = raw;
+
     QStringList list = convert.split('.', QString::SkipEmptyParts);
-    drawClass(list.at(0), list.at(1), this);
+    if (list.size()==2)
+        new radarLine((list.at(0)).simplified(), (list.at(1)).simplified(), this);
+    else
+        qDebug() << "Unreadable serial data" << endl;
 }
+

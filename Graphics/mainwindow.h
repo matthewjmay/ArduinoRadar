@@ -1,10 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include <QMainWindow>
 
-class QMainWindow;
 //class QPushButton;
 class QSerialPort;
-class QImage;
 
 class MainWindow : public QMainWindow
 {
@@ -16,6 +15,9 @@ public:
 private:
     //QPushButton *start;
     QSerialPort *input;
+
+protected:
+    void paintEvent(QPaintEvent*);
 
 private slots:
     //void startTransmission();
