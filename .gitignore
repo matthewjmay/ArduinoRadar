@@ -4,3 +4,4 @@ Graphics/QtGraphicsArduino.pro.user
 Graphics/.qmake.stash
 Graphics/Makefile
 Graphics/Makefile.Debug
+Graphics/Makefile.Release
