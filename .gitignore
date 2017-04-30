@@ -1,4 +1,3 @@
-*.pro
 *.o
 Graphics/debug/
 Graphics/QtGraphicsArduino.pro.user
