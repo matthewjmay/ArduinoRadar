@@ -26,10 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     dot.cpp \
-    radarLine.cpp
+    radarLine.cpp \
+    serialportdialog.cpp
 
 HEADERS  += mainwindow.h \
     dot.h \
-    radarLine.h
+    radarLine.h \
+    serialportdialog.h
 
 FORMS    +=

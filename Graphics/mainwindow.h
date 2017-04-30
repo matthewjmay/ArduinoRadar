@@ -4,6 +4,7 @@
 
 //class QPushButton;
 class QSerialPort;
+class serialPortDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -15,13 +16,16 @@ public:
 private:
     //QPushButton *start;
     QSerialPort *input;
+    serialPortDialog *getname;
 
 protected:
     void paintEvent(QPaintEvent*);
 
 private slots:
-    //void startTransmission();
+    void openport(const QString&);
     void radarEvent();
+signals:
+    void invalidport(const QString& portname);
 };
 
 #endif // MAINWINDOW_H

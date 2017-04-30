@@ -1,20 +1,27 @@
 #include "mainwindow.h"
 #include "radarLine.h"
+#include "serialportdialog.h"
 #include <QWidget>
 #include <QtSerialPort/QtSerialPort>
 #include <QSerialPort>
 #include <QPainter>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     // set black background
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::black);
     setAutoFillBackground(true);
     setPalette(pal);
+    getname = new serialPortDialog(this);
+    connect(getname, &serialPortDialog::entered, this, &MainWindow::openport);
+    connect(this, &MainWindow::invalidport, getname, &serialPortDialog::invalidname);
+    getname->show();
+}
 
-    input = new QSerialPort("COM6", this);
+void MainWindow::openport(const QString& name){
+
+    input = new QSerialPort(name, this);
 
     //if serial port does not automatically configure, uncomment below
     /*
@@ -25,12 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
     input->setStopBits(QSerialPort::OneStop);
     */
     bool success = input->open(QIODevice::ReadOnly);
-    if (!success)
-        qDebug() << "Error: "<< input->error() << " " << input->errorString() << endl;
-    else
+    if (!success){
+        delete input;
+        emit invalidport(name);
+    }
+    else{
         input->clear();
+        getname->close();
         //connect serial port readyRead to radar event
         connect(input, &QSerialPort::readyRead, this, &MainWindow::radarEvent);
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent * /* event */ ){

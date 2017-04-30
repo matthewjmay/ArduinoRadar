@@ -19,7 +19,6 @@ radarLine::radarLine(const QString &distance, const QString &motorpos, QWidget *
     setPalette(pal);
     firstpaint = true;
 
-
     //connect timer timeout to colour change (fading)
     timer = new QTimer(this);
     timer -> start(colorChangeTime);
